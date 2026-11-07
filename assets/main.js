@@ -31,7 +31,18 @@
 
   if (themeBtn) {
     themeBtn.addEventListener('click', function () {
-      applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', true);
+      var nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+
+      if (!document.startViewTransition || reduceMotion.matches) {
+        applyTheme(nextTheme, true);
+        return;
+      }
+
+      var rect = themeBtn.getBoundingClientRect();
+      root.style.setProperty('--tx', (rect.left + rect.width / 2).toFixed(0) + 'px');
+      root.style.setProperty('--ty', (rect.top + rect.height / 2).toFixed(0) + 'px');
+
+      document.startViewTransition(function () { applyTheme(nextTheme, true); });
     });
   }
 

@@ -1080,6 +1080,48 @@ html.js .hero-tags { animation: heroFade 0.9s 0.58s cubic-bezier(0.2, 0.7, 0.2, 
   color: var(--ink);
 }
 
+.principles {
+  margin-top: 30px;
+  border-top: 1px solid var(--line);
+}
+
+.principles li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+  padding: 14px 2px;
+  border-bottom: 1px solid var(--line);
+  transition: padding-inline 0.35s ease, background-color 0.3s ease;
+}
+
+.principles li:hover {
+  padding-inline: 10px;
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+}
+
+.p-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--teal-ink);
+}
+
+.principles b {
+  display: block;
+  font-size: 14.5px;
+  letter-spacing: -0.01em;
+}
+
+.principles p {
+  max-width: none;
+  margin-bottom: 0;
+  margin-top: 2px;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
 .signature {
   margin-top: 30px;
   font-family: var(--font-mono);
@@ -1521,6 +1563,30 @@ html.js .term-line { opacity: 0; }
   animation: dash 1.4s linear infinite;
 }
 
+/* 流程图入场：节点依次浮入，连线随后浮现 */
+.pipeline .node {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+html.js .work-card:not(.is-inview) .pipeline .node,
+html.js .work-card:not(.is-inview) .pipeline .link,
+html.js .work-card:not(.is-inview) .pipeline .loop,
+html.js .work-card:not(.is-inview) .pipeline .loop-label {
+  opacity: 0;
+}
+
+.work-card.is-inview .pipeline .node {
+  animation: nodeIn 0.62s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.work-card.is-inview .pipeline .node:nth-of-type(1) { animation-delay: 0.12s; }
+.work-card.is-inview .pipeline .node:nth-of-type(2) { animation-delay: 0.24s; }
+.work-card.is-inview .pipeline .node:nth-of-type(3) { animation-delay: 0.36s; }
+.work-card.is-inview .pipeline .link { animation: strokeFade 0.5s 0.46s ease both; }
+.work-card.is-inview .pipeline .loop { animation: strokeFade 0.6s 0.58s ease both; }
+.work-card.is-inview .pipeline .loop-label { animation: strokeFade 0.6s 0.72s ease both; }
+
 .art-logo {
   display: grid;
   place-items: center;
@@ -1892,6 +1958,29 @@ html.js .term-line { opacity: 0; }
   background: rgba(255, 255, 255, 0.05);
 }
 
+.open-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.open-tags li {
+  padding: 7px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--on-dark-soft);
+  transition: border-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.open-tags li:hover {
+  transform: translateY(-2px);
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
 .socials {
   display: flex;
   flex-wrap: wrap;
@@ -1932,6 +2021,37 @@ html.js .term-line { opacity: 0; }
 [data-theme="dark"] .contact-watermark { opacity: 0.07; }
 
 /* ---------- 13. Footer ---------- */
+.footer-index {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 56px);
+  padding-block: clamp(34px, 4vw, 52px) 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-col h4 {
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(244, 246, 241, 0.42);
+}
+
+.footer-col a {
+  display: block;
+  padding-block: 5px;
+  font-size: 13px;
+  color: var(--on-dark-soft);
+  transition: color 0.25s ease, transform 0.3s ease;
+}
+
+.footer-col a:hover {
+  color: var(--teal);
+  transform: translateX(3px);
+}
+
 .site-footer {
   background: var(--dark);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -2159,6 +2279,32 @@ html.js .term-line { opacity: 0; }
 
 .logo-frame.is-wiggle img { animation: wiggle 0.6s ease; }
 
+@keyframes nodeIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes strokeFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 主题切换：从按钮位置扩散的圆形擦除 */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  animation: themeWipe 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes themeWipe {
+  from { clip-path: circle(0 at var(--tx, 50%) var(--ty, 50%)); }
+  to { clip-path: circle(150vmax at var(--tx, 50%) var(--ty, 50%)); }
+}
+
 /* ---------- 16. Responsive ---------- */
 @media (min-width: 901px) {
   .terminal {
@@ -2242,6 +2388,11 @@ html.js .term-line { opacity: 0; }
 
   .wip-row { grid-template-columns: 64px minmax(0, 1fr) auto; gap: 14px; }
 
+  .footer-index {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px 24px;
+  }
+
   .footer-inner {
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -2288,6 +2439,19 @@ html.js .term-line { opacity: 0; }
   .wip-year { display: none; }
   .wip-status { grid-row: 1; grid-column: 2; }
   .wip-main { grid-column: 1; grid-row: 1; }
+
+  .footer-index {
+    grid-template-columns: 1fr 1fr;
+    gap: 26px 18px;
+    padding-block: 30px 24px;
+  }
+
+  .footer-col a { font-size: 12.5px; }
+
+  .principles li {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 10px;
+  }
 
   .pipeline .label { font-size: 19px; }
   .pipeline .num { font-size: 12px; }
@@ -2363,6 +2527,11 @@ html.js .term-line { opacity: 0; }
 
   html.js .reveal { opacity: 1; transform: none; }
   html.js .term-line { opacity: 1; }
+
+  html.js .work-card .pipeline .node,
+  html.js .work-card .pipeline .link,
+  html.js .work-card .pipeline .loop,
+  html.js .work-card .pipeline .loop-label { opacity: 1; }
 }
 
 @media print {
