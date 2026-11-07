@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="light" data-lang="zh">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,6 +38,19 @@
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         root.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
       } catch (e) { }
+
+      var lang = null;
+      try { lang = localStorage.getItem('yr-lang'); } catch (e) { }
+      if (lang !== 'zh' && lang !== 'en') {
+        var nav = (navigator.language || 'zh').toLowerCase();
+        lang = nav.indexOf('zh') === 0 ? 'zh' : 'en';
+      }
+      root.dataset.lang = lang;
+      root.lang = lang === 'en' ? 'en' : 'zh-CN';
+      if (lang === 'en') {
+        root.classList.add('is-i18n-loading');
+        window.setTimeout(function () { root.classList.remove('is-i18n-loading'); }, 1500);
+      }
     })();
   </script>
 
@@ -57,7 +70,7 @@
   </script>
 </head>
 <body>
-  <a class="skip-link" href="#main">跳到主要内容</a>
+  <a class="skip-link" href="#main" data-en="Skip to main content">跳到主要内容</a>
 
   <svg class="sprite" aria-hidden="true" focusable="false">
     <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></symbol>
@@ -77,29 +90,32 @@
 
   <header class="site-header" id="siteHeader">
     <div class="shell header-inner">
-      <a class="brand" href="#top" aria-label="鱼心快跑，回到顶部">
+      <a class="brand" href="#top" aria-label="鱼心快跑，回到顶部" data-en-label="Yuxin Run, back to top">
         <span class="brand-mark"><img src="assets/img/yuxin-run.png" alt="" width="44" height="29"></span>
         <span class="brand-text">
-          <strong>鱼心快跑</strong>
+          <strong data-en="Yuxin Run">鱼心快跑</strong>
           <small>YUXIN RUN</small>
         </span>
       </a>
 
-      <nav class="nav" id="primaryNav" aria-label="主导航">
-        <a href="#about">关于</a>
-        <a href="#works">作品</a>
-        <a href="#stack">技能</a>
-        <a href="#notes">笔记</a>
-        <a href="#contact">联系</a>
+      <nav class="nav" id="primaryNav" aria-label="主导航" data-en-label="Primary navigation">
+        <a href="#about" data-en="About">关于</a>
+        <a href="#works" data-en="Works">作品</a>
+        <a href="#stack" data-en="Stack">技能</a>
+        <a href="#notes" data-en="Notes">笔记</a>
+        <a href="#contact" data-en="Contact">联系</a>
       </nav>
 
       <div class="header-actions">
+        <button class="icon-btn lang-toggle" id="langToggle" type="button" aria-label="Switch to English" aria-pressed="false">
+          <span class="lang-label" aria-hidden="true">EN</span>
+        </button>
         <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="切换深浅色主题" aria-pressed="false">
           <svg class="i sun" aria-hidden="true"><use href="#i-sun"/></svg>
           <svg class="i moon" aria-hidden="true"><use href="#i-moon"/></svg>
         </button>
         <a class="btn btn-ghost header-cta" href="https://yuxin.run/better-agent/" target="_blank" rel="noopener">
-          Agent 指南
+          <span data-en="Agent Guide">Agent 指南</span>
           <svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
         </a>
         <button class="icon-btn menu-toggle" id="menuToggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobileMenu">
@@ -110,14 +126,14 @@
     </div>
   </header>
 
-  <div class="mobile-menu" id="mobileMenu" aria-hidden="true" aria-label="移动端导航">
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true" aria-label="移动端导航" data-en-label="Mobile navigation">
     <img class="mobile-menu-mark" src="assets/img/yuxin-run.png" alt="" width="546" height="363" aria-hidden="true">
     <nav class="mobile-nav">
-      <a href="#about"><span>01</span>关于我</a>
-      <a href="#works"><span>02</span>作品</a>
-      <a href="#stack"><span>03</span>技能</a>
-      <a href="#notes"><span>04</span>笔记</a>
-      <a href="#contact"><span>05</span>联系</a>
+      <a href="#about" data-en-html="&lt;span&gt;01&lt;/span&gt;About"><span>01</span>关于我</a>
+      <a href="#works" data-en-html="&lt;span&gt;02&lt;/span&gt;Works"><span>02</span>作品</a>
+      <a href="#stack" data-en-html="&lt;span&gt;03&lt;/span&gt;Stack"><span>03</span>技能</a>
+      <a href="#notes" data-en-html="&lt;span&gt;04&lt;/span&gt;Notes"><span>04</span>笔记</a>
+      <a href="#contact" data-en-html="&lt;span&gt;05&lt;/span&gt;Contact"><span>05</span>联系</a>
     </nav>
     <div class="mobile-menu-foot">
       <div class="menu-socials">
@@ -126,10 +142,10 @@
         <a href="mailto:yuxink@126.com">Email</a>
       </div>
       <a class="btn btn-primary" href="https://yuxin.run/better-agent/" target="_blank" rel="noopener">
-        阅读《构建更好的 Agent》
+        <span data-en="Read the Agent guide">阅读《构建更好的 Agent》</span>
         <svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
       </a>
-      <p>鱼心快跑，Bug 追不到。</p>
+      <p data-en="Yuxin runs, bugs can’t catch up.">鱼心快跑，Bug 追不到。</p>
     </div>
   </div>
 
@@ -139,23 +155,23 @@
       <div class="hero-glow" id="heroGlow" aria-hidden="true"></div>
       <div class="shell hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow"><span class="dot"></span>AI Agent 工程师 · 开放合作</p>
-          <h1 class="hero-title">
+          <p class="eyebrow"><span class="dot"></span><span data-en="AI Agent engineer · open to collaboration">AI Agent 工程师 · 开放合作</span></p>
+          <h1 class="hero-title" data-en-html='<span class="hero-line">Yuxin runs.</span><span class="hero-line"><em class="serif">Bugs</em> <span class="mark">don’t.<svg class="mark-line" viewBox="0 0 520 22" preserveAspectRatio="none" aria-hidden="true"><path d="M3 15C86 6 168 18 262 10S444 4 517 12"/></svg></span></span>'>
             <span class="hero-line">鱼心快跑，</span>
             <span class="hero-line"><em class="serif">Bug</em> <span class="mark">追不到。<svg class="mark-line" viewBox="0 0 520 22" preserveAspectRatio="none" aria-hidden="true"><path d="M3 15C86 6 168 18 262 10S444 4 517 12"/></svg></span></span>
           </h1>
-          <p class="hero-lede">我是鱼心，一名和 Agent 一起写代码的程序员。把复杂系统拆成能跑的小块，把 Bug 留在上一版——这是我做事的方式。</p>
+          <p class="hero-lede" data-en="I’m Yuxin, a programmer who writes code alongside agents. Break a complex system into pieces that run, and leave the bugs in the last release — that’s how I work.">我是鱼心，一名和 Agent 一起写代码的程序员。把复杂系统拆成能跑的小块，把 Bug 留在上一版——这是我做事的方式。</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#works">
-              看看我在做什么
+              <span data-en="See what I build">看看我在做什么</span>
               <svg class="i" aria-hidden="true"><use href="#i-arrow-right"/></svg>
             </a>
             <a class="link-arrow" href="https://yuxin.run/better-agent/" target="_blank" rel="noopener">
-              从《构建更好的 Agent》开始
+              <span data-en="Start with the flagship guide">从《构建更好的 Agent》开始</span>
               <svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
             </a>
           </div>
-          <ul class="hero-tags" aria-label="关注方向">
+          <ul class="hero-tags" aria-label="关注方向" data-en-label="Focus areas">
             <li>Context Engineering</li>
             <li>Agent Evals</li>
             <li>Developer Experience</li>
@@ -165,16 +181,16 @@
         <div class="hero-visual">
           <figure class="logo-card" data-tilt>
             <div class="logo-frame">
-              <img src="assets/img/yuxin-run.png" alt="鱼心快跑品牌标志：一条戴着耳机、正在奔跑的青色小鱼，两侧是代码尖括号" width="546" height="363">
+              <img src="assets/img/yuxin-run.png" alt="鱼心快跑品牌标志：一条戴着耳机、正在奔跑的青色小鱼，两侧是代码尖括号" data-en-alt="Yuxin Run logo: a teal fish wearing headphones and running between code brackets" width="546" height="363">
             </div>
-            <figcaption class="handnote">跑得比 Bug 快一点。<span aria-hidden="true">↗</span></figcaption>
+            <figcaption class="handnote" data-en-html='A little faster than the bugs.<span aria-hidden="true">↗</span>'>跑得比 Bug 快一点。<span aria-hidden="true">↗</span></figcaption>
           </figure>
           <span class="float-chip chip-a" aria-hidden="true">ship → measure → iterate</span>
-          <span class="float-chip chip-b" aria-hidden="true">稳定性是一种浪漫</span>
+          <span class="float-chip chip-b" aria-hidden="true" data-en="Stability is a kind of romance">稳定性是一种浪漫</span>
           <span class="float-chip chip-c" aria-hidden="true">{ AI Agent }</span>
         </div>
       </div>
-      <a class="scroll-cue" href="#about" aria-label="向下滚动到关于我">
+      <a class="scroll-cue" href="#about" aria-label="向下滚动到关于我" data-en-label="Scroll down to the about section">
         <span>SCROLL</span>
         <i aria-hidden="true"></i>
       </a>
@@ -184,15 +200,15 @@
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
         <div class="ticker-group">
-          <span class="ticker-item">鱼心快跑，Bug 追不到 <b>✳</b></span>
+          <span class="ticker-item" data-en-html="Yuxin runs, bugs can’t catch up <b>✳</b>">鱼心快跑，Bug 追不到 <b>✳</b></span>
           <span class="ticker-item">Build Better Agents <b>✳</b></span>
-          <span class="ticker-item">25 个站点 · 全部手写 <b>✳</b></span>
+          <span class="ticker-item" data-en-html="25 sites · all hand-written <b>✳</b>">25 个站点 · 全部手写 <b>✳</b></span>
           <span class="ticker-item">Harness · MCP · A2A · Evals <b>✳</b></span>
         </div>
         <div class="ticker-group">
-          <span class="ticker-item">鱼心快跑，Bug 追不到 <b>✳</b></span>
+          <span class="ticker-item" data-en-html="Yuxin runs, bugs can’t catch up <b>✳</b>">鱼心快跑，Bug 追不到 <b>✳</b></span>
           <span class="ticker-item">Build Better Agents <b>✳</b></span>
-          <span class="ticker-item">25 个站点 · 全部手写 <b>✳</b></span>
+          <span class="ticker-item" data-en-html="25 sites · all hand-written <b>✳</b>">25 个站点 · 全部手写 <b>✳</b></span>
           <span class="ticker-item">Harness · MCP · A2A · Evals <b>✳</b></span>
         </div>
       </div>
@@ -203,68 +219,68 @@
       <div class="shell">
         <header class="section-head reveal">
           <div>
-            <p class="kicker"><span>01</span>关于 / ABOUT</p>
-            <h2>把系统跑稳，<br>把想法跑出来。</h2>
+            <p class="kicker" data-en-html="&lt;span&gt;01&lt;/span&gt;About / ABOUT"><span>01</span>关于 / ABOUT</p>
+            <h2 data-en-html="Steady systems,<br>shipped ideas.">把系统跑稳，<br>把想法跑出来。</h2>
           </div>
-          <p class="section-sub">写代码这件事，我认真对待每一个边界条件；做产品这件事，我信奉先跑起来，再跑得更好。</p>
+          <p class="section-sub" data-en="In code, I take every edge case seriously. In product, I believe in getting it running first, then running it better.">写代码这件事，我认真对待每一个边界条件；做产品这件事，我信奉先跑起来，再跑得更好。</p>
         </header>
 
         <div class="about-grid">
           <div class="about-copy reveal">
-            <p>我是<strong>鱼心</strong>，一名程序员。日常和 AI Agent、后端服务、工程效率打交道：设计工具、打磨上下文、盯住每一次回归，让系统在真实流量里稳稳地跑。</p>
-            <p>除了写代码，我也把踩过的坑整理成可复用的方法，放在 <a class="text-link" href="https://yuxin.run/better-agent/" target="_blank" rel="noopener">《如何构建更好的 Agent》<svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a> 里。好的工程不是炫技，而是让别人也能放心地改。</p>
-            <p>「鱼心快跑」是我的个人品牌名——提醒自己保持速度，也保持方向。</p>
-            <p>陆续写了 25 本在线手册：从 Agent 工程、模式手册，一路写到睡眠、养育、减脂和创业。全部手写、全部免费、全部可以直接读。</p>
+            <p data-en-html="I’m <strong>Yuxin</strong>, a programmer. My days revolve around AI agents, backend services and developer productivity: designing tools, sharpening context, watching every regression, and keeping systems steady under real traffic.">我是<strong>鱼心</strong>，一名程序员。日常和 AI Agent、后端服务、工程效率打交道：设计工具、打磨上下文、盯住每一次回归，让系统在真实流量里稳稳地跑。</p>
+            <p data-en-html='Besides writing code, I turn the traps I hit into reusable methods, collected in <a class="text-link" href="https://yuxin.run/better-agent/" target="_blank" rel="noopener">How to Build Better Agents<svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>. Good engineering isn’t showing off — it’s letting other people change things with confidence.'>除了写代码，我也把踩过的坑整理成可复用的方法，放在 <a class="text-link" href="https://yuxin.run/better-agent/" target="_blank" rel="noopener">《如何构建更好的 Agent》<svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a> 里。好的工程不是炫技，而是让别人也能放心地改。</p>
+            <p data-en="“Yuxin Run” is my personal brand — a reminder to keep the pace, and keep the direction.">「鱼心快跑」是我的个人品牌名——提醒自己保持速度，也保持方向。</p>
+            <p data-en="I’ve written 25 online handbooks so far: from agent engineering and pattern guides all the way to sleep, parenting, fat loss and starting a business. All hand-written, all free, all readable right now.">陆续写了 25 本在线手册：从 Agent 工程、模式手册，一路写到睡眠、养育、减脂和创业。全部手写、全部免费、全部可以直接读。</p>
 
             <dl class="facts">
               <div>
-                <dt>现在在做</dt>
-                <dd>构建更好的 Agent</dd>
+                <dt data-en="Now building">现在在做</dt>
+                <dd data-en="Better agents">构建更好的 Agent</dd>
               </div>
               <div>
-                <dt>常用语言</dt>
+                <dt data-en="Languages">常用语言</dt>
                 <dd>TypeScript · Python · Go</dd>
               </div>
               <div>
-                <dt>关注方向</dt>
-                <dd>Agent · 可靠性 · DX</dd>
+                <dt data-en="Focus">关注方向</dt>
+                <dd data-en="Agent · Reliability · DX">Agent · 可靠性 · DX</dd>
               </div>
               <div>
-                <dt>我的信条</dt>
-                <dd>先跑起来，再跑得更快</dd>
+                <dt data-en="Motto">我的信条</dt>
+                <dd data-en="Get it running, then run it faster">先跑起来，再跑得更快</dd>
               </div>
             </dl>
 
-            <ul class="principles" aria-label="做事的三条原则">
+            <ul class="principles" aria-label="做事的三条原则" data-en-label="Three principles">
               <li>
                 <span class="p-num">01</span>
-                <div><b>可验证</b><p>先定义怎么算对，再动手写。</p></div>
+                <div><b data-en="Verifiable">可验证</b><p data-en="Define what “right” means before writing a line.">先定义怎么算对，再动手写。</p></div>
               </li>
               <li>
                 <span class="p-num">02</span>
-                <div><b>可回滚</b><p>每次改动都留退路，不留烂摊子。</p></div>
+                <div><b data-en="Reversible">可回滚</b><p data-en="Every change keeps a way back, and leaves no mess.">每次改动都留退路，不留烂摊子。</p></div>
               </li>
               <li>
                 <span class="p-num">03</span>
-                <div><b>可解释</b><p>说不清为什么，就不算做完。</p></div>
+                <div><b data-en="Explainable">可解释</b><p data-en="If you can’t say why, it isn’t done.">说不清为什么，就不算做完。</p></div>
               </li>
             </ul>
 
-            <p class="signature" aria-hidden="true">— 鱼心，写于某个不想修 Bug 的夜晚</p>
+            <p class="signature" aria-hidden="true" data-en="— Yuxin, written on a night when I didn’t feel like fixing bugs">— 鱼心，写于某个不想修 Bug 的夜晚</p>
           </div>
 
-          <figure class="terminal reveal" aria-label="终端演示：whoami 输出鱼心，目录里是上下文工程、工具设计与评测，最近一次提交是修复 Bug，随后构建更好的 Agent 成功">
+          <figure class="terminal reveal" aria-label="终端演示：whoami 输出鱼心，目录里是上下文工程、工具设计与评测，最近一次提交是修复 Bug，随后构建更好的 Agent 成功" data-en-label="Terminal demo: whoami returns Yuxin, the folder holds context engineering, tool design and evals, the latest commit fixes a bug, then building better agents succeeds">
             <div class="terminal-bar">
               <i></i><i></i><i></i>
               <p>yuxin@run — zsh</p>
             </div>
             <div class="terminal-body">
               <p class="term-line" style="--i:0"><span class="prompt">$</span> <span class="cmd">whoami</span></p>
-              <p class="term-line out" style="--i:1">鱼心 / yuxin — 和 Agent 一起写代码的人</p>
+              <p class="term-line out" style="--i:1" data-en="Yuxin / yuxin — writes code alongside agents">鱼心 / yuxin — 和 Agent 一起写代码的人</p>
               <p class="term-line" style="--i:2"><span class="prompt">$</span> <span class="cmd">ls focus/</span></p>
               <p class="term-line out" style="--i:3">context-engineering.md&nbsp;&nbsp;tool-design.md&nbsp;&nbsp;evals.md</p>
               <p class="term-line" style="--i:4"><span class="prompt">$</span> <span class="cmd">git log -1 --pretty=%s</span></p>
-              <p class="term-line out" style="--i:5">fix: 让 Bug 追不上 (#42)</p>
+              <p class="term-line out" style="--i:5" data-en="fix: keep bugs from catching up (#42)">fix: 让 Bug 追不上 (#42)</p>
               <p class="term-line" style="--i:6"><span class="prompt">$</span> <span class="cmd">./run.sh --agent</span></p>
               <p class="term-line out" style="--i:7"><span class="ok">→ building better agents ... ok</span></p>
               <p class="term-line" style="--i:8"><span class="prompt">$</span> <span class="cursor" aria-hidden="true"></span></p>
@@ -279,26 +295,26 @@
       <div class="shell">
         <header class="section-head reveal">
           <div>
-            <p class="kicker"><span>02</span>作品 / WORKS</p>
-            <h2>二十五个站点，<br>陆续跑起来。</h2>
+            <p class="kicker" data-en-html="&lt;span&gt;02&lt;/span&gt;Works / WORKS"><span>02</span>作品 / WORKS</p>
+            <h2 data-en-html="25 sites,<br>coming alive.">二十五个站点，<br>陆续跑起来。</h2>
           </div>
           <div class="works-side">
-            <p class="section-sub">从 Agent 工程一路写到睡觉、减脂和养孩子。点开就能读；标着「待上线」的两本，等代码推上来。</p>
-            <ul class="site-stats" aria-label="站点统计">
-              <li><strong data-count="25">25</strong><span>站点总数</span></li>
-              <li><strong data-count="18">18</strong><span>Agent 手册</span></li>
-              <li><strong data-count="6">6</strong><span>生活指南</span></li>
+            <p class="section-sub" data-en="From agent engineering all the way to sleep, fat loss and raising kids. Click and read; the two marked “pending” are waiting for their code to land.">从 Agent 工程一路写到睡觉、减脂和养孩子。点开就能读；标着「待上线」的两本，等代码推上来。</p>
+            <ul class="site-stats" aria-label="站点统计" data-en-label="Site statistics">
+              <li><strong data-count="25">25</strong><span data-en="Total sites">站点总数</span></li>
+              <li><strong data-count="18">18</strong><span data-en="Agent manuals">Agent 手册</span></li>
+              <li><strong data-count="6">6</strong><span data-en="Life guides">生活指南</span></li>
             </ul>
           </div>
         </header>
 
-        <div class="work-filter reveal" role="group" aria-label="按类别筛选项目">
+        <div class="work-filter reveal" role="group" aria-label="按类别筛选项目" data-en-label="Filter projects by category">
           <span class="filter-label" aria-hidden="true">FILTER</span>
-          <button class="filter-btn is-active" type="button" data-filter="all" aria-pressed="true">全部 <span>25</span></button>
-          <button class="filter-btn" type="button" data-filter="agent" aria-pressed="false">Agent 手册 <span>11</span></button>
-          <button class="filter-btn" type="button" data-filter="patterns" aria-pressed="false">模式手册 <span>7</span></button>
-          <button class="filter-btn" type="button" data-filter="life" aria-pressed="false">生活指南 <span>6</span></button>
-          <button class="filter-btn" type="button" data-filter="site" aria-pressed="false">本站 <span>1</span></button>
+          <button class="filter-btn is-active" type="button" data-filter="all" aria-pressed="true" data-en-html="All &lt;span&gt;25&lt;/span&gt;">全部 <span>25</span></button>
+          <button class="filter-btn" type="button" data-filter="agent" aria-pressed="false" data-en-html="Agent manuals &lt;span&gt;11&lt;/span&gt;">Agent 手册 <span>11</span></button>
+          <button class="filter-btn" type="button" data-filter="patterns" aria-pressed="false" data-en-html="Pattern guides &lt;span&gt;7&lt;/span&gt;">模式手册 <span>7</span></button>
+          <button class="filter-btn" type="button" data-filter="life" aria-pressed="false" data-en-html="Life guides &lt;span&gt;6&lt;/span&gt;">生活指南 <span>6</span></button>
+          <button class="filter-btn" type="button" data-filter="site" aria-pressed="false" data-en-html="This site &lt;span&gt;1&lt;/span&gt;">本站 <span>1</span></button>
         </div>
 
         <div class="work-grid" id="workGrid">
@@ -307,15 +323,15 @@
             <div class="work-featured-copy">
               <div class="work-top">
                 <span class="work-index">01</span>
-                <span class="work-kind">旗舰手册 / FLAGSHIP</span>
+                <span class="work-kind" data-en="Flagship manual / FLAGSHIP">旗舰手册 / FLAGSHIP</span>
               </div>
-              <h3>如何构建更好的 Agent</h3>
-              <p>写给程序员转型 Agent 开发的实战手册：心智模型、上下文工程、工具设计、RAG、工作流、评估、可观测性、成本与多 Agent。中英双语，图解 + 清单 + 可运行代码。</p>
+              <h3 data-en="How to Build Better Agents">如何构建更好的 Agent</h3>
+              <p data-en="A hands-on manual for programmers moving into agent development: mental models, context engineering, tool design, RAG, workflows, evals, observability, cost and multi-agent. Bilingual, with diagrams, checklists and runnable code.">写给程序员转型 Agent 开发的实战手册：心智模型、上下文工程、工具设计、RAG、工作流、评估、可观测性、成本与多 Agent。中英双语，图解 + 清单 + 可运行代码。</p>
               <ul class="work-points">
-                <li>上下文工程</li>
-                <li>工具设计</li>
-                <li>评测与迭代</li>
-                <li>中英双语</li>
+                <li data-en="Context engineering">上下文工程</li>
+                <li data-en="Tool design">工具设计</li>
+                <li data-en="Evals & iteration">评测与迭代</li>
+                <li data-en="Bilingual">中英双语</li>
               </ul>
               <span class="work-foot">
                 <span class="work-domain">yuxin.run/better-agent</span>
@@ -323,7 +339,7 @@
               </span>
             </div>
             <div class="work-art">
-              <svg class="pipeline" viewBox="0 0 560 218" role="img" aria-label="Agent 构建流程示意：上下文、工具、评测三者形成迭代闭环">
+              <svg class="pipeline" viewBox="0 0 560 218" role="img" aria-label="Agent 构建流程示意：上下文、工具、评测三者形成迭代闭环" data-en-label="Agent build pipeline: context, tools and evals form an iterative loop">
                 <defs>
                   <marker id="arrowTeal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                     <path d="M0 0 10 5 0 10Z" fill="var(--teal)"/>
@@ -336,24 +352,24 @@
                   <text class="num" x="16" y="26">01</text>
                   <rect x="10" y="44" width="150" height="78" rx="14"/>
                   <text class="label" x="30" y="76">context</text>
-                  <text class="sub" x="30" y="98">刚好够用</text>
+                  <text class="sub" x="30" y="98" data-en="Just enough">刚好够用</text>
                 </g>
                 <g class="node">
                   <text class="num" x="216" y="26">02</text>
                   <rect x="210" y="44" width="150" height="78" rx="14"/>
                   <text class="label" x="230" y="76">tools</text>
-                  <text class="sub" x="230" y="98">少而准</text>
+                  <text class="sub" x="230" y="98" data-en="Few but precise">少而准</text>
                 </g>
                 <g class="node">
                   <text class="num" x="416" y="26">03</text>
                   <rect x="410" y="44" width="140" height="78" rx="14"/>
                   <text class="label" x="430" y="76">evals</text>
-                  <text class="sub" x="430" y="98">可度量</text>
+                  <text class="sub" x="430" y="98" data-en="Measurable">可度量</text>
                 </g>
                 <path class="link" d="M160 83H206" />
                 <path class="link" d="M360 83H406" />
                 <path class="loop" d="M480 122V158Q480 178 458 178H102Q80 178 80 158V126" />
-                <text class="loop-label" x="250" y="204">iterate · 每次只改一个变量</text>
+                <text class="loop-label" x="250" y="204" data-en="iterate · change one variable at a time">iterate · 每次只改一个变量</text>
               </svg>
               <span class="art-caption" aria-hidden="true">context → tools → evals → iterate</span>
             </div>
@@ -363,11 +379,11 @@
           <a class="work-card reveal" href="https://yuxin.run/harness-engineering/" target="_blank" rel="noopener" data-cat="agent" style="--d:1">
             <div class="work-top">
               <span class="work-index">02</span>
-              <span class="work-kind">AGENT 手册 / HARNESS</span>
+              <span class="work-kind" data-en="Agent manual / HARNESS">AGENT 手册 / HARNESS</span>
             </div>
-            <h3>缰绳工程实战指南</h3>
-            <p>从和 AI 聊天到给 AI 造缰绳：五层架构、大厂实战案例、可复制模板与交互实验室，中英双语。</p>
-            <ul class="work-points"><li>五层架构</li><li>实战案例</li><li>实验室</li></ul>
+            <h3 data-en="Harness Engineering in Practice">缰绳工程实战指南</h3>
+            <p data-en="From chatting with AI to building the harness around it: a five-layer architecture, real-world cases, reusable templates and an interactive lab. Bilingual.">从和 AI 聊天到给 AI 造缰绳：五层架构、大厂实战案例、可复制模板与交互实验室，中英双语。</p>
+            <ul class="work-points"><li data-en="Five-layer architecture">五层架构</li><li data-en="Real-world cases">实战案例</li><li data-en="Interactive lab">实验室</li></ul>
             <span class="work-foot">
               <span class="work-domain">/harness-engineering</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -377,11 +393,11 @@
           <a class="work-card reveal" href="https://yuxin.run/deepseek-harness/" target="_blank" rel="noopener" data-cat="agent" style="--d:2">
             <div class="work-top">
               <span class="work-index">03</span>
-              <span class="work-kind">AGENT 手册 / DEEPSEEK</span>
+              <span class="work-kind" data-en="Agent manual / DEEPSEEK">AGENT 手册 / DEEPSEEK</span>
             </div>
-            <h3>DeepSeek Harness 实战指南</h3>
-            <p>十分钟上手、权限边界、四种模式、事件溯源、成本账本、插件开发与生产踩坑，命令可直接复制运行。</p>
-            <ul class="work-points"><li>十分钟上手</li><li>权限边界</li><li>生产踩坑</li></ul>
+            <h3 data-en="DeepSeek Harness in Practice">DeepSeek Harness 实战指南</h3>
+            <p data-en="Ten-minute setup, permission boundaries, four modes, event sourcing, a cost ledger, plugin development and production pitfalls — every command ready to copy and run.">十分钟上手、权限边界、四种模式、事件溯源、成本账本、插件开发与生产踩坑，命令可直接复制运行。</p>
+            <ul class="work-points"><li data-en="Ten-minute setup">十分钟上手</li><li data-en="Permission boundaries">权限边界</li><li data-en="Production pitfalls">生产踩坑</li></ul>
             <span class="work-foot">
               <span class="work-domain">/deepseek-harness</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -391,11 +407,11 @@
           <a class="work-card reveal" href="https://yuxin.run/super-agent/" target="_blank" rel="noopener" data-cat="agent" style="--d:3">
             <div class="work-top">
               <span class="work-index">04</span>
-              <span class="work-kind">AGENT 手册 / 架构拆解</span>
+              <span class="work-kind" data-en="Agent manual / Architecture">AGENT 手册 / 架构拆解</span>
             </div>
-            <h3>Super-agent 架构讲透</h3>
-            <p>把双层 Router / Worker、事件驱动、异步多信道、存算分离与外部 Watchdog 一层层拆开，看它从操作系统借来的老主意。</p>
-            <ul class="work-points"><li>Router / Worker</li><li>事件驱动</li><li>多信道</li></ul>
+            <h3 data-en="Inside the Super-agent Architecture">Super-agent 架构讲透</h3>
+            <p data-en="Peel apart the two-tier router/worker split, event-driven flow, async multi-channel design, compute–storage separation and the external watchdog — old ideas borrowed from operating systems.">把双层 Router / Worker、事件驱动、异步多信道、存算分离与外部 Watchdog 一层层拆开，看它从操作系统借来的老主意。</p>
+            <ul class="work-points"><li>Router / Worker</li><li data-en="Event-driven">事件驱动</li><li data-en="Multi-channel">多信道</li></ul>
             <span class="work-foot">
               <span class="work-domain">/super-agent</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -405,11 +421,11 @@
           <a class="work-card reveal" href="https://yuxin.run/agent-loop-engineering/" target="_blank" rel="noopener" data-cat="agent" style="--d:4">
             <div class="work-top">
               <span class="work-index">05</span>
-              <span class="work-kind">AGENT 手册 / LOOP</span>
+              <span class="work-kind" data-en="Agent manual / LOOP">AGENT 手册 / LOOP</span>
             </div>
-            <h3>Agent Loop 工程</h3>
-            <p>14 章讲透 Context → Action → Verify → Loop：停止条件、上下文压缩、工具设计、HITL、可观测性与成本控制。</p>
-            <ul class="work-points"><li>停止条件</li><li>上下文压缩</li><li>HITL</li></ul>
+            <h3 data-en="Agent Loop Engineering">Agent Loop 工程</h3>
+            <p data-en="14 chapters on Context → Action → Verify → Loop: stopping conditions, context compression, tool design, HITL, observability and cost control.">14 章讲透 Context → Action → Verify → Loop：停止条件、上下文压缩、工具设计、HITL、可观测性与成本控制。</p>
+            <ul class="work-points"><li data-en="Stopping conditions">停止条件</li><li data-en="Context compression">上下文压缩</li><li>HITL</li></ul>
             <span class="work-foot">
               <span class="work-domain">/agent-loop-engineering</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -419,11 +435,11 @@
           <a class="work-card reveal" href="https://yuxin.run/claude-code-analysis/" target="_blank" rel="noopener" data-cat="agent" style="--d:5">
             <div class="work-top">
               <span class="work-index">06</span>
-              <span class="work-kind">AGENT 手册 / 源码解析</span>
+              <span class="work-kind" data-en="Agent manual / Source dive">AGENT 手册 / 源码解析</span>
             </div>
-            <h3>Claude Code 源码解析</h3>
-            <p>把 Claude Code 的源码讲透：架构全景、Agent 循环、System Prompt、工具系统、权限、记忆、多 Agent、成本与安全。</p>
-            <ul class="work-points"><li>架构全景</li><li>System Prompt</li><li>多 Agent</li></ul>
+            <h3 data-en="Reading the Claude Code Source">Claude Code 源码解析</h3>
+            <p data-en="A deep read of the Claude Code source: the full architecture, the agent loop, system prompts, the tool system, permissions, memory, multi-agent, cost and security.">把 Claude Code 的源码讲透：架构全景、Agent 循环、System Prompt、工具系统、权限、记忆、多 Agent、成本与安全。</p>
+            <ul class="work-points"><li data-en="Architecture">架构全景</li><li>System Prompt</li><li data-en="Multi-agent">多 Agent</li></ul>
             <span class="work-foot">
               <span class="work-domain">/claude-code-analysis</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -433,11 +449,11 @@
           <a class="work-card reveal" href="https://yuxin.run/agent-ontology/" target="_blank" rel="noopener" data-cat="agent" style="--d:6">
             <div class="work-top">
               <span class="work-index">07</span>
-              <span class="work-kind">AGENT 手册 / 本体论</span>
+              <span class="work-kind" data-en="Agent manual / Ontology">AGENT 手册 / 本体论</span>
             </div>
-            <h3>Agent 本体论实战指南</h3>
-            <p>从本体论、语义层到多智能体编排与 MCP，12 章图解、代码与落地案例，把“它到底在说什么”讲清楚。</p>
-            <ul class="work-points"><li>语义层</li><li>多智能体编排</li><li>MCP</li></ul>
+            <h3 data-en="Agent Ontology in Practice">Agent 本体论实战指南</h3>
+            <p data-en="From ontology and the semantic layer to multi-agent orchestration and MCP: 12 chapters of diagrams, code and case studies that explain what the agent is actually talking about.">从本体论、语义层到多智能体编排与 MCP，12 章图解、代码与落地案例，把“它到底在说什么”讲清楚。</p>
+            <ul class="work-points"><li data-en="Semantic layer">语义层</li><li data-en="Multi-agent orchestration">多智能体编排</li><li>MCP</li></ul>
             <span class="work-foot">
               <span class="work-domain">/agent-ontology</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -447,11 +463,11 @@
           <a class="work-card reveal" href="https://yuxin.run/langchain-langgraph/" target="_blank" rel="noopener" data-cat="agent" style="--d:7">
             <div class="work-top">
               <span class="work-index">08</span>
-              <span class="work-kind">AGENT 手册 / LANGGRAPH</span>
+              <span class="work-kind" data-en="Agent manual / LANGGRAPH">AGENT 手册 / LANGGRAPH</span>
             </div>
-            <h3>LangGraph &amp; LangChain 实战</h3>
-            <p>讲清两者区别与选型，再以 LangGraph 为核心：心智模型、状态、路由、持久化到人机协同的端到端落地。</p>
-            <ul class="work-points"><li>选型对比</li><li>状态与路由</li><li>持久化</li></ul>
+            <h3 data-en="LangGraph &amp; LangChain in Practice">LangGraph &amp; LangChain 实战</h3>
+            <p data-en="Clarify how the two differ and how to choose, then go deep on LangGraph: mental models, state, routing, persistence and end-to-end human-in-the-loop delivery.">讲清两者区别与选型，再以 LangGraph 为核心：心智模型、状态、路由、持久化到人机协同的端到端落地。</p>
+            <ul class="work-points"><li data-en="Choosing between them">选型对比</li><li data-en="State &amp; routing">状态与路由</li><li data-en="Persistence">持久化</li></ul>
             <span class="work-foot">
               <span class="work-domain">/langchain-langgraph</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -462,11 +478,11 @@
           <a class="work-card reveal" href="https://yuxin.run/agent-evaluation-patterns/" target="_blank" rel="noopener" data-cat="patterns" style="--d:0">
             <div class="work-top">
               <span class="work-index">09</span>
-              <span class="work-kind">模式手册 / EVALS</span>
+              <span class="work-kind" data-en="Pattern guide / EVALS">模式手册 / EVALS</span>
             </div>
-            <h3>Agent 评测手册</h3>
-            <p>评测数据集、四大评判器、轨迹评测、CI 门禁、A/B 实验与线上抽样，从原理到生产，感觉不算数。</p>
-            <ul class="work-points"><li>四大评判器</li><li>轨迹评测</li><li>CI 门禁</li></ul>
+            <h3 data-en="Agent Evaluation Patterns">Agent 评测手册</h3>
+            <p data-en="Eval datasets, four kinds of judges, trajectory evaluation, CI gates, A/B tests and online sampling — from theory to production, because feelings don’t count.">评测数据集、四大评判器、轨迹评测、CI 门禁、A/B 实验与线上抽样，从原理到生产，感觉不算数。</p>
+            <ul class="work-points"><li data-en="Four judges">四大评判器</li><li data-en="Trajectory evals">轨迹评测</li><li data-en="CI gates">CI 门禁</li></ul>
             <span class="work-foot">
               <span class="work-domain">/agent-evaluation-patterns</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -476,11 +492,11 @@
           <a class="work-card reveal" href="https://yuxin.run/agent-memory-patterns/" target="_blank" rel="noopener" data-cat="patterns" style="--d:1">
             <div class="work-top">
               <span class="work-index">10</span>
-              <span class="work-kind">模式手册 / MEMORY</span>
+              <span class="work-kind" data-en="Pattern guide / MEMORY">模式手册 / MEMORY</span>
             </div>
-            <h3>Agent 记忆手册</h3>
-            <p>分层记忆、按需检索、压缩遗忘、多租户隔离，再加一份生产 Bug 大全，从原理到生产。</p>
-            <ul class="work-points"><li>分层记忆</li><li>压缩去重</li><li>多租户</li></ul>
+            <h3 data-en="Agent Memory Patterns">Agent 记忆手册</h3>
+            <p data-en="Layered memory, on-demand retrieval, compression and forgetting, multi-tenant isolation, plus a catalogue of production bugs — from theory to production.">分层记忆、按需检索、压缩遗忘、多租户隔离，再加一份生产 Bug 大全，从原理到生产。</p>
+            <ul class="work-points"><li data-en="Layered memory">分层记忆</li><li data-en="Compression &amp; dedup">压缩去重</li><li data-en="Multi-tenant">多租户</li></ul>
             <span class="work-foot">
               <span class="work-domain">/agent-memory-patterns</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -490,11 +506,11 @@
           <a class="work-card reveal" href="https://yuxin.run/agent-observability-patterns/" target="_blank" rel="noopener" data-cat="patterns" style="--d:2">
             <div class="work-top">
               <span class="work-index">11</span>
-              <span class="work-kind">模式手册 / OBSERVABILITY</span>
+              <span class="work-kind" data-en="Pattern guide / OBSERVABILITY">模式手册 / OBSERVABILITY</span>
             </div>
-            <h3>Agent 可观测性手册</h3>
-            <p>Trace、Metrics、Logs、Evals、告警与看板，把 Agent 的黑盒变成一条能看清的链路。</p>
-            <ul class="work-points"><li>Trace</li><li>Metrics</li><li>告警看板</li></ul>
+            <h3 data-en="Agent Observability Patterns">Agent 可观测性手册</h3>
+            <p data-en="Traces, metrics, logs, evals, alerts and dashboards: turn the agent’s black box into a chain you can actually see.">Trace、Metrics、Logs、Evals、告警与看板，把 Agent 的黑盒变成一条能看清的链路。</p>
+            <ul class="work-points"><li>Trace</li><li>Metrics</li><li data-en="Alerts &amp; dashboards">告警看板</li></ul>
             <span class="work-foot">
               <span class="work-domain">/agent-observability-patterns</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -504,11 +520,11 @@
           <a class="work-card reveal" href="https://yuxin.run/agent-skillhub-patterns/" target="_blank" rel="noopener" data-cat="patterns" style="--d:3">
             <div class="work-top">
               <span class="work-index">12</span>
-              <span class="work-kind">模式手册 / SKILL HUB</span>
+              <span class="work-kind" data-en="Pattern guide / SKILL HUB">模式手册 / SKILL HUB</span>
             </div>
-            <h3>Skill Hub 手册</h3>
-            <p>技能注册、版本管理、权限控制、安全沙箱、自动发现与审计计费，从零搭到生产级。</p>
-            <ul class="work-points"><li>技能注册</li><li>安全沙箱</li><li>审计计费</li></ul>
+            <h3 data-en="Skill Hub Patterns">Skill Hub 手册</h3>
+            <p data-en="Skill registration, versioning, permission control, secure sandboxes, auto-discovery, auditing and billing — build it from zero to production grade.">技能注册、版本管理、权限控制、安全沙箱、自动发现与审计计费，从零搭到生产级。</p>
+            <ul class="work-points"><li data-en="Skill registry">技能注册</li><li data-en="Secure sandbox">安全沙箱</li><li data-en="Audit &amp; billing">审计计费</li></ul>
             <span class="work-foot">
               <span class="work-domain">/agent-skillhub-patterns</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -518,11 +534,11 @@
           <a class="work-card reveal" href="https://yuxin.run/a2a-patterns/" target="_blank" rel="noopener" data-cat="patterns" style="--d:4">
             <div class="work-top">
               <span class="work-index">13</span>
-              <span class="work-kind">模式手册 / A2A</span>
+              <span class="work-kind" data-en="Pattern guide / A2A">模式手册 / A2A</span>
             </div>
-            <h3>A2A 模式手册</h3>
-            <p>Agent-to-Agent 通信协议拆开讲：任务生命周期、A2A vs MCP、七种落地模式与安全鉴权。</p>
-            <ul class="work-points"><li>协议拆解</li><li>A2A vs MCP</li><li>安全鉴权</li></ul>
+            <h3 data-en="A2A Patterns">A2A 模式手册</h3>
+            <p data-en="The agent-to-agent protocol, taken apart: task lifecycle, A2A vs MCP, seven deployment patterns and secure authentication.">Agent-to-Agent 通信协议拆开讲：任务生命周期、A2A vs MCP、七种落地模式与安全鉴权。</p>
+            <ul class="work-points"><li data-en="Protocol breakdown">协议拆解</li><li>A2A vs MCP</li><li data-en="Secure auth">安全鉴权</li></ul>
             <span class="work-foot">
               <span class="work-domain">/a2a-patterns</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -532,11 +548,11 @@
           <a class="work-card reveal" href="https://yuxin.run/mcp-patterns/" target="_blank" rel="noopener" data-cat="patterns" style="--d:5">
             <div class="work-top">
               <span class="work-index">14</span>
-              <span class="work-kind">模式手册 / MCP</span>
+              <span class="work-kind" data-en="Pattern guide / MCP">模式手册 / MCP</span>
             </div>
             <h3>MCP Patterns</h3>
-            <p>MCP Server 工程模式：协议、传输、鉴权、多租户、调试，以及 Skill Hub 与 Agent 框架对接。</p>
-            <ul class="work-points"><li>传输</li><li>鉴权</li><li>多租户</li></ul>
+            <p data-en="Engineering patterns for MCP servers: protocol, transport, auth, multi-tenancy, debugging, and wiring them into skill hubs and agent frameworks.">MCP Server 工程模式：协议、传输、鉴权、多租户、调试，以及 Skill Hub 与 Agent 框架对接。</p>
+            <ul class="work-points"><li data-en="Transport">传输</li><li data-en="Auth">鉴权</li><li data-en="Multi-tenant">多租户</li></ul>
             <span class="work-foot">
               <span class="work-domain">/mcp-patterns</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -546,11 +562,11 @@
           <a class="work-card reveal" href="https://yuxin.run/llm-gateway-patterns/" target="_blank" rel="noopener" data-cat="patterns" style="--d:6">
             <div class="work-top">
               <span class="work-index">15</span>
-              <span class="work-kind">模式手册 / GATEWAY</span>
+              <span class="work-kind" data-en="Pattern guide / GATEWAY">模式手册 / GATEWAY</span>
             </div>
             <h3>LLM Gateway Patterns</h3>
-            <p>把「能调通模型 API」升级成「能在生产扛住流量、成本与故障」：路由、缓存、限流与容错。</p>
-            <ul class="work-points"><li>路由</li><li>限流容错</li><li>落地清单</li></ul>
+            <p data-en="Upgrade from “the model API works” to “it survives production traffic, cost and failures”: routing, caching, rate limiting and fault tolerance.">把「能调通模型 API」升级成「能在生产扛住流量、成本与故障」：路由、缓存、限流与容错。</p>
+            <ul class="work-points"><li data-en="Routing">路由</li><li data-en="Rate limits &amp; fallbacks">限流容错</li><li data-en="Shipping checklist">落地清单</li></ul>
             <span class="work-foot">
               <span class="work-domain">/llm-gateway-patterns</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -561,11 +577,11 @@
           <a class="work-card reveal" href="https://yuxin.run/good-sleep/" target="_blank" rel="noopener" data-cat="life" style="--d:0">
             <div class="work-top">
               <span class="work-index">16</span>
-              <span class="work-kind">生活指南 / SLEEP</span>
+              <span class="work-kind" data-en="Life guide / SLEEP">生活指南 / SLEEP</span>
             </div>
-            <h3>睡觉这件事</h3>
-            <p>一本能听完的睡眠手册：一晚八小时的结构、带等级的数字、今晚能做的四件事，还有一份红线清单。</p>
-            <ul class="work-points"><li>睡眠结构</li><li>可听</li><li>红线清单</li></ul>
+            <h3 data-en="All About Sleep">睡觉这件事</h3>
+            <p data-en="A sleep handbook you can listen to: the structure of an eight-hour night, numbers with grades, four things to do tonight, and a red-line checklist.">一本能听完的睡眠手册：一晚八小时的结构、带等级的数字、今晚能做的四件事，还有一份红线清单。</p>
+            <ul class="work-points"><li data-en="Sleep structure">睡眠结构</li><li data-en="Audio edition">可听</li><li data-en="Red lines">红线清单</li></ul>
             <span class="work-foot">
               <span class="work-domain">/good-sleep</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -575,11 +591,11 @@
           <a class="work-card reveal" href="https://yuxin.run/child-rearing/" target="_blank" rel="noopener" data-cat="life" style="--d:1">
             <div class="work-top">
               <span class="work-index">17</span>
-              <span class="work-kind">生活指南 / 养育</span>
+              <span class="work-kind" data-en="Life guide / Parenting">生活指南 / 养育</span>
             </div>
-            <h3>养大一个人</h3>
-            <p>从出生到大学毕业的分阶段养育手册：睡眠屏幕运动的硬指标、男孩女孩的真实差异、AI 时代该陪什么。全站可以听。</p>
-            <ul class="work-points"><li>分阶段</li><li>硬指标</li><li>辟谣</li></ul>
+            <h3 data-en="Raising a Human">养大一个人</h3>
+            <p data-en="A stage-by-stage parenting handbook from birth to graduation: hard numbers for sleep, screens and exercise, real differences between boys and girls, and what to be present for in the AI era. Fully listenable.">从出生到大学毕业的分阶段养育手册：睡眠屏幕运动的硬指标、男孩女孩的真实差异、AI 时代该陪什么。全站可以听。</p>
+            <ul class="work-points"><li data-en="By stage">分阶段</li><li data-en="Hard numbers">硬指标</li><li data-en="Myth-busting">辟谣</li></ul>
             <span class="work-foot">
               <span class="work-domain">/child-rearing</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -589,11 +605,11 @@
           <a class="work-card reveal" href="https://yuxin.run/live-better/" target="_blank" rel="noopener" data-cat="life" style="--d:2">
             <div class="work-top">
               <span class="work-index">18</span>
-              <span class="work-kind">生活指南 / LIFE</span>
+              <span class="work-kind" data-en="Life guide / LIFE">生活指南 / LIFE</span>
             </div>
-            <h3>活得更好</h3>
-            <p>关于人生意义、择偶婚姻、孩子教育、城市买房与养老的 20 章指南，白天夜晚双主题，每条建议今天就能用。</p>
-            <ul class="work-points"><li>20 章</li><li>双主题</li><li>可执行</li></ul>
+            <h3 data-en="Living Better">活得更好</h3>
+            <p data-en="20 chapters on meaning, partnership and marriage, raising kids, buying a home in the city and retirement — with light and dark themes, and advice you can use today.">关于人生意义、择偶婚姻、孩子教育、城市买房与养老的 20 章指南，白天夜晚双主题，每条建议今天就能用。</p>
+            <ul class="work-points"><li data-en="20 chapters">20 章</li><li data-en="Two themes">双主题</li><li data-en="Actionable">可执行</li></ul>
             <span class="work-foot">
               <span class="work-domain">/live-better</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -603,11 +619,11 @@
           <a class="work-card reveal" href="https://yuxin.run/lean-strong/" target="_blank" rel="noopener" data-cat="life" style="--d:3">
             <div class="work-top">
               <span class="work-index">19</span>
-              <span class="work-kind">生活指南 / FITNESS</span>
+              <span class="work-kind" data-en="Life guide / FITNESS">生活指南 / FITNESS</span>
             </div>
-            <h3>轻与壮</h3>
-            <p>用大白话讲清减脂与增肌：热量缺口、蛋白质、力量训练、睡眠与平台期，附计算器与可打印清单。</p>
-            <ul class="work-points"><li>热量缺口</li><li>力量训练</li><li>计算器</li></ul>
+            <h3 data-en="Lean &amp; Strong">轻与壮</h3>
+            <p data-en="Fat loss and muscle gain in plain language: calorie deficits, protein, strength training, sleep and plateaus, with calculators and printable checklists.">用大白话讲清减脂与增肌：热量缺口、蛋白质、力量训练、睡眠与平台期，附计算器与可打印清单。</p>
+            <ul class="work-points"><li data-en="Calorie deficit">热量缺口</li><li data-en="Strength training">力量训练</li><li data-en="Calculators">计算器</li></ul>
             <span class="work-foot">
               <span class="work-domain">/lean-strong</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -617,11 +633,11 @@
           <a class="work-card reveal" href="https://yuxin.run/common-algorithms/" target="_blank" rel="noopener" data-cat="life" style="--d:4">
             <div class="work-top">
               <span class="work-index">20</span>
-              <span class="work-kind">生活指南 / 算法</span>
+              <span class="work-kind" data-en="Life guide / Algorithms">生活指南 / 算法</span>
             </div>
-            <h3>算法这件事</h3>
-            <p>讲生活里到处都在跑的算法：导航凭什么这么绕、照片为什么能变小、扫码付款为什么有时被拦。42 篇，可以听。</p>
-            <ul class="work-points"><li>42 篇</li><li>复杂度</li><li>可听</li></ul>
+            <h3 data-en="How Algorithms Really Work">算法这件事</h3>
+            <p data-en="The algorithms running quietly through daily life: why navigation takes the long way, how photos shrink, why a payment sometimes gets blocked. 42 pieces, fully listenable.">讲生活里到处都在跑的算法：导航凭什么这么绕、照片为什么能变小、扫码付款为什么有时被拦。42 篇，可以听。</p>
+            <ul class="work-points"><li data-en="42 pieces">42 篇</li><li data-en="Complexity">复杂度</li><li data-en="Audio edition">可听</li></ul>
             <span class="work-foot">
               <span class="work-domain">/common-algorithms</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -631,11 +647,11 @@
           <a class="work-card reveal" href="https://yuxin.run/start-a-business/" target="_blank" rel="noopener" data-cat="life" style="--d:5">
             <div class="work-top">
               <span class="work-index">21</span>
-              <span class="work-kind">生活指南 / 生意</span>
+              <span class="work-kind" data-en="Life guide / Business">生活指南 / 生意</span>
             </div>
-            <h3>创业这件事</h3>
-            <p>从 0 开始做一门生意：要不要辞职、行业怎么选、一单怎么算平、融资的代价与股权控制权。38 篇，可以听。</p>
-            <ul class="work-points"><li>38 篇</li><li>单位经济</li><li>股权</li></ul>
+            <h3 data-en="Starting a Business">创业这件事</h3>
+            <p data-en="Building a business from zero: whether to quit, how to pick an industry, when a single order breaks even, the cost of funding and who controls the equity. 38 pieces, fully listenable.">从 0 开始做一门生意：要不要辞职、行业怎么选、一单怎么算平、融资的代价与股权控制权。38 篇，可以听。</p>
+            <ul class="work-points"><li data-en="38 pieces">38 篇</li><li data-en="Unit economics">单位经济</li><li data-en="Equity">股权</li></ul>
             <span class="work-foot">
               <span class="work-domain">/start-a-business</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -646,11 +662,11 @@
           <a class="work-card reveal" href="https://yuxin.run/forward-deployed-engineer/" target="_blank" rel="noopener" data-cat="agent" style="--d:0">
             <div class="work-top">
               <span class="work-index">22</span>
-              <span class="work-kind">AGENT 手册 / FDE</span>
+              <span class="work-kind" data-en="Agent manual / FDE">AGENT 手册 / FDE</span>
             </div>
-            <h3>FDE 这件事</h3>
-            <p>把 Forward Deployed Engineer 讲透：它到底是什么、JD 里写了什么、要会哪些技术、中外薪资如何、怎么转型、怎么干得更好。全站可以听。</p>
-            <ul class="work-points"><li>角色拆解</li><li>技能栈</li><li>转型路线</li></ul>
+            <h3 data-en="The Forward Deployed Engineer">FDE 这件事</h3>
+            <p data-en="Everything about the forward deployed engineer: what the role really is, what the job description says, which skills matter, how pay compares, how to move into it and how to do it well. Fully listenable.">把 Forward Deployed Engineer 讲透：它到底是什么、JD 里写了什么、要会哪些技术、中外薪资如何、怎么转型、怎么干得更好。全站可以听。</p>
+            <ul class="work-points"><li data-en="Role breakdown">角色拆解</li><li data-en="Skill stack">技能栈</li><li data-en="Career path">转型路线</li></ul>
             <span class="work-foot">
               <span class="work-domain">/forward-deployed-engineer</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -660,11 +676,11 @@
           <a class="work-card is-pending reveal" href="https://yuxin.run/production-scheduling-agent/" target="_blank" rel="noopener" data-cat="agent" style="--d:1">
             <div class="work-top">
               <span class="work-index">23</span>
-              <span class="work-kind">AGENT 手册 / 排程</span>
+              <span class="work-kind" data-en="Agent manual / Scheduling">AGENT 手册 / 排程</span>
             </div>
-            <h3>生产排程 Agent</h3>
-            <p>把车间约束翻译成模型：工序、产能、交期、换线。让 Agent 负责翻译、解释与重排，而不是凭感觉排。</p>
-            <ul class="work-points"><li>约束建模</li><li>异常重排</li><li>冲突解释</li></ul>
+            <h3 data-en="Production Scheduling Agent">生产排程 Agent</h3>
+            <p data-en="Translate shop-floor constraints into a model: operations, capacity, due dates, changeovers. Let the agent translate, explain and reschedule — not guess.">把车间约束翻译成模型：工序、产能、交期、换线。让 Agent 负责翻译、解释与重排，而不是凭感觉排。</p>
+            <ul class="work-points"><li data-en="Constraint modelling">约束建模</li><li data-en="Exception rescheduling">异常重排</li><li data-en="Conflict explanation">冲突解释</li></ul>
             <span class="work-foot">
               <span class="work-domain">/production-scheduling-agent</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -674,11 +690,11 @@
           <a class="work-card is-pending reveal" href="https://yuxin.run/rag-flow/" target="_blank" rel="noopener" data-cat="agent" style="--d:2">
             <div class="work-top">
               <span class="work-index">24</span>
-              <span class="work-kind">AGENT 手册 / RAG</span>
+              <span class="work-kind" data-en="Agent manual / RAG">AGENT 手册 / RAG</span>
             </div>
-            <h3>RAG 全流程</h3>
-            <p>从切分、索引到召回、重排、生成与评测，把 RAG 的每个环节做成能跑起来的流程，而不是一堆参数推荐。</p>
-            <ul class="work-points"><li>切分与索引</li><li>双路召回</li><li>评测闭环</li></ul>
+            <h3 data-en="The Full RAG Pipeline">RAG 全流程</h3>
+            <p data-en="From chunking and indexing to retrieval, reranking, generation and evaluation — every stage as a pipeline you can run, not a pile of parameter tips.">从切分、索引到召回、重排、生成与评测，把 RAG 的每个环节做成能跑起来的流程，而不是一堆参数推荐。</p>
+            <ul class="work-points"><li data-en="Chunking &amp; indexing">切分与索引</li><li data-en="Hybrid retrieval">双路召回</li><li data-en="Eval loop">评测闭环</li></ul>
             <span class="work-foot">
               <span class="work-domain">/rag-flow</span>
               <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
@@ -690,42 +706,42 @@
             <div class="work-featured-copy">
               <div class="work-top">
                 <span class="work-index">25</span>
-                <span class="work-kind">个人站 / THIS SITE</span>
+                <span class="work-kind" data-en="Personal site / THIS SITE">个人站 / THIS SITE</span>
               </div>
-              <h3>鱼心快跑 · 个人主页</h3>
-              <p>你正在看的这一页。手写 HTML / CSS / JavaScript，没有框架、没有构建步骤，只把想说的话讲清楚。</p>
+              <h3 data-en="Yuxin Run · Homepage">鱼心快跑 · 个人主页</h3>
+              <p data-en="The page you’re on. Hand-written HTML, CSS and JavaScript — no framework, no build step, just the words worth saying.">你正在看的这一页。手写 HTML / CSS / JavaScript，没有框架、没有构建步骤，只把想说的话讲清楚。</p>
               <span class="work-foot">
-                <span class="work-domain">yuxin.run — 就是这里</span>
+                <span class="work-domain" data-en="yuxin.run — right here">yuxin.run — 就是这里</span>
                 <span class="work-go" aria-hidden="true"><svg class="i"><use href="#i-arrow-up-right"/></svg></span>
               </span>
             </div>
             <div class="work-art art-logo">
-              <img src="assets/img/yuxin-run.png" alt="鱼心快跑 Logo" width="546" height="363" loading="lazy">
+              <img src="assets/img/yuxin-run.png" alt="鱼心快跑 Logo" data-en-alt="Yuxin Run logo" width="546" height="363" loading="lazy">
             </div>
           </a>
         </div>
 
         <div class="wip reveal">
           <div class="wip-head">
-            <h3>关于「待上线」</h3>
+            <h3 data-en="About “pending”">关于「待上线」</h3>
             <span>PENDING</span>
           </div>
           <div class="wip-rows">
             <div class="wip-row">
               <span class="wip-year">LOCAL</span>
               <div class="wip-main">
-                <h4>production-scheduling-agent · 生产排程 Agent</h4>
-                <p>代码在本地写着，只是还没推。入口先摆在这儿——推上去那天，链接自然就活了，主页不用再改。</p>
+                <h4 data-en="production-scheduling-agent · Production Scheduling Agent">production-scheduling-agent · 生产排程 Agent</h4>
+                <p data-en="The code is written locally, just not pushed yet. The door is already here — the day it lands, the link comes alive and this page never needs editing.">代码在本地写着，只是还没推。入口先摆在这儿——推上去那天，链接自然就活了，主页不用再改。</p>
               </div>
-              <span class="wip-status">待推送</span>
+              <span class="wip-status" data-en="Not pushed">待推送</span>
             </div>
             <div class="wip-row">
               <span class="wip-year">LOCAL</span>
               <div class="wip-main">
-                <h4>rag-flow · RAG 全流程</h4>
-                <p>同理：仓库已建、入口已就位，等手册写完一起推。</p>
+                <h4 data-en="rag-flow · The Full RAG Pipeline">rag-flow · RAG 全流程</h4>
+                <p data-en="Same story: the repository exists, the door is in place, and the handbook ships when it’s finished.">同理：仓库已建、入口已就位，等手册写完一起推。</p>
               </div>
-              <span class="wip-status">待推送</span>
+              <span class="wip-status" data-en="Not pushed">待推送</span>
             </div>
           </div>
         </div>
@@ -737,16 +753,16 @@
       <div class="shell">
         <header class="section-head reveal">
           <div>
-            <p class="kicker"><span>03</span>技能 / STACK</p>
-            <h2>工具箱不大，<br>但每件都用得顺手。</h2>
+            <p class="kicker" data-en-html="&lt;span&gt;03&lt;/span&gt;Stack / STACK"><span>03</span>技能 / STACK</p>
+            <h2 data-en-html="A small toolbox,<br>every tool well worn.">工具箱不大，<br>但每件都用得顺手。</h2>
           </div>
-          <p class="section-sub">技术会过时，判断力不会。挑工具的标准只有一个：能不能让下一次改动更安全。</p>
+          <p class="section-sub" data-en="Technologies age; judgement doesn’t. There’s one criterion for picking a tool: does it make the next change safer?">技术会过时，判断力不会。挑工具的标准只有一个：能不能让下一次改动更安全。</p>
         </header>
 
         <div class="stack-grid">
           <article class="stack-card reveal">
             <span class="stack-index">01</span>
-            <h3>语言与框架</h3>
+            <h3 data-en="Languages &amp; frameworks">语言与框架</h3>
             <ul class="chips">
               <li>TypeScript</li>
               <li>Python</li>
@@ -757,36 +773,36 @@
           </article>
           <article class="stack-card reveal">
             <span class="stack-index">02</span>
-            <h3>AI 与 Agent</h3>
+            <h3 data-en="AI &amp; agents">AI 与 Agent</h3>
             <ul class="chips">
-              <li>LLM 应用</li>
-              <li>上下文工程</li>
-              <li>工具调用</li>
+              <li data-en="LLM apps">LLM 应用</li>
+              <li data-en="Context engineering">上下文工程</li>
+              <li data-en="Tool use">工具调用</li>
               <li>MCP · A2A</li>
               <li>LangGraph</li>
-              <li>评测 / Evals</li>
+              <li data-en="Evals">评测 / Evals</li>
             </ul>
           </article>
           <article class="stack-card reveal">
             <span class="stack-index">03</span>
-            <h3>工程与平台</h3>
+            <h3 data-en="Engineering &amp; platform">工程与平台</h3>
             <ul class="chips">
               <li>Docker</li>
               <li>CI / CD</li>
-              <li>可观测性</li>
+              <li data-en="Observability">可观测性</li>
               <li>VitePress</li>
               <li>GitHub Pages</li>
-              <li>性能优化</li>
+              <li data-en="Performance">性能优化</li>
             </ul>
           </article>
           <article class="stack-card reveal">
             <span class="stack-index">04</span>
-            <h3>协作与表达</h3>
+            <h3 data-en="Collaboration &amp; writing">协作与表达</h3>
             <ul class="chips">
-              <li>技术写作</li>
-              <li>代码评审</li>
-              <li>方案设计</li>
-              <li>开源协作</li>
+              <li data-en="Technical writing">技术写作</li>
+              <li data-en="Code review">代码评审</li>
+              <li data-en="System design">方案设计</li>
+              <li data-en="Open source">开源协作</li>
             </ul>
           </article>
         </div>
@@ -798,11 +814,11 @@
       <div class="shell">
         <header class="section-head reveal">
           <div>
-            <p class="kicker"><span>04</span>阅读 / READING</p>
-            <h2>先读这几本，<br>再动手也不迟。</h2>
+            <p class="kicker" data-en-html="&lt;span&gt;04&lt;/span&gt;Reading / READING"><span>04</span>阅读 / READING</p>
+            <h2 data-en-html="Read these first,<br>then start building.">先读这几本，<br>再动手也不迟。</h2>
           </div>
           <a class="link-arrow" href="https://yuxin.run/better-agent/" target="_blank" rel="noopener">
-            从旗舰手册读起
+            <span data-en="Start with the flagship guide">从旗舰手册读起</span>
             <svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
           </a>
         </header>
@@ -811,8 +827,8 @@
           <a class="note-row" href="https://yuxin.run/better-agent/" target="_blank" rel="noopener">
             <span class="note-num">01</span>
             <div class="note-main">
-              <h3>上下文工程：给 Agent 一份刚好够用的简历</h3>
-              <p>信息不是越多越好——留什么、删什么，决定了它能不能做对判断。</p>
+              <h3 data-en="Context engineering: give the agent a résumé that’s just enough">上下文工程：给 Agent 一份刚好够用的简历</h3>
+              <p data-en="More information isn’t better — what you keep and what you cut decides whether it judges well.">信息不是越多越好——留什么、删什么，决定了它能不能做对判断。</p>
             </div>
             <span class="note-tag">AGENT</span>
             <svg class="i note-arrow" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
@@ -820,8 +836,8 @@
           <a class="note-row" href="https://yuxin.run/harness-engineering/" target="_blank" rel="noopener">
             <span class="note-num">02</span>
             <div class="note-main">
-              <h3>工具设计：少即是多，准即是快</h3>
-              <p>工具是 Agent 的手。手太多会打架，命名含糊就会抓错东西。</p>
+              <h3 data-en="Tool design: fewer is more, precise is fast">工具设计：少即是多，准即是快</h3>
+              <p data-en="Tools are the agent’s hands. Too many and they fight; vague names and they grab the wrong thing.">工具是 Agent 的手。手太多会打架，命名含糊就会抓错东西。</p>
             </div>
             <span class="note-tag">DESIGN</span>
             <svg class="i note-arrow" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
@@ -829,8 +845,8 @@
           <a class="note-row" href="https://yuxin.run/agent-evaluation-patterns/" target="_blank" rel="noopener">
             <span class="note-num">03</span>
             <div class="note-main">
-              <h3>评测驱动：怎么证明 Agent 真的变好了</h3>
-              <p>感觉不算数。先定义「好」，再谈优化，才不会被随机性骗。</p>
+              <h3 data-en="Evals first: how to prove the agent actually got better">评测驱动：怎么证明 Agent 真的变好了</h3>
+              <p data-en="Feelings don’t count. Define “good” before optimizing, or randomness will fool you.">感觉不算数。先定义「好」，再谈优化，才不会被随机性骗。</p>
             </div>
             <span class="note-tag">EVALS</span>
             <svg class="i note-arrow" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
@@ -838,8 +854,8 @@
           <a class="note-row" href="https://yuxin.run/forward-deployed-engineer/" target="_blank" rel="noopener">
             <span class="note-num">04</span>
             <div class="note-main">
-              <h3>FDE 这件事：把需求翻译成能上线的代码</h3>
-              <p>前线工程师不是外包，是站在客户现场做判断的人。</p>
+              <h3 data-en="The FDE: turning requirements into code that ships">FDE 这件事：把需求翻译成能上线的代码</h3>
+              <p data-en="A forward deployed engineer isn’t an outsourcer — they’re the one making judgement calls on the customer’s floor.">前线工程师不是外包，是站在客户现场做判断的人。</p>
             </div>
             <span class="note-tag">ROLE</span>
             <svg class="i note-arrow" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
@@ -847,8 +863,8 @@
           <a class="note-row" href="https://yuxin.run/rag-flow/" target="_blank" rel="noopener">
             <span class="note-num">05</span>
             <div class="note-main">
-              <h3>RAG 全流程：答案不准，往往不是模型的问题</h3>
-              <p>切分、索引、召回、重排、生成、评测——六道工序，各有各的账。</p>
+              <h3 data-en="The full RAG pipeline: bad answers usually aren’t the model’s fault">RAG 全流程：答案不准，往往不是模型的问题</h3>
+              <p data-en="Chunking, indexing, retrieval, reranking, generation, evaluation — six stages, six places to lose.">切分、索引、召回、重排、生成、评测——六道工序，各有各的账。</p>
             </div>
             <span class="note-tag">RAG</span>
             <svg class="i note-arrow" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
@@ -856,8 +872,8 @@
           <a class="note-row" href="https://yuxin.run/common-algorithms/" target="_blank" rel="noopener">
             <span class="note-num">06</span>
             <div class="note-main">
-              <h3>算法这件事：导航为什么这么绕，照片为什么能变小</h3>
-              <p>把生活里到处都在跑的算法，讲成不用公式也能听懂的故事。</p>
+              <h3 data-en="Algorithms in real life: why navigation takes the long way, why photos shrink">算法这件事：导航为什么这么绕，照片为什么能变小</h3>
+              <p data-en="The algorithms running all around your daily life, told as stories you can follow without a single formula.">把生活里到处都在跑的算法，讲成不用公式也能听懂的故事。</p>
             </div>
             <span class="note-tag">LIFE</span>
             <svg class="i note-arrow" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
@@ -870,11 +886,11 @@
     <section class="section contact" id="contact">
       <img class="contact-watermark" src="assets/img/yuxin-run.png" alt="" width="546" height="363" loading="lazy" aria-hidden="true">
       <div class="shell">
-        <p class="kicker reveal"><span>05</span>联系 / CONTACT</p>
+        <p class="kicker reveal" data-en-html="&lt;span&gt;05&lt;/span&gt;Contact / CONTACT"><span>05</span>联系 / CONTACT</p>
         <div class="contact-grid">
           <div class="reveal">
-            <h2>有想法？<br>一起把它<em class="serif">跑</em>起来。</h2>
-            <p>无论是 Agent 相关的产品、工程效率工具，还是只想聊聊怎么少写点 Bug，都欢迎来信。我通常会在一两天内回复。</p>
+            <h2 data-en-html='Got an idea?<br>Let’s get it <em class="serif">running</em>.'>有想法？<br>一起把它<em class="serif">跑</em>起来。</h2>
+            <p data-en="Whether it’s an agent product, an engineering-productivity tool, or just a chat about writing fewer bugs — email me. I usually reply within a day or two.">无论是 Agent 相关的产品、工程效率工具，还是只想聊聊怎么少写点 Bug，都欢迎来信。我通常会在一两天内回复。</p>
           </div>
           <div class="contact-actions reveal">
             <div class="mail-row">
@@ -882,19 +898,19 @@
                 <svg class="i" aria-hidden="true"><use href="#i-mail"/></svg>
                 yuxink@126.com
               </a>
-              <button class="copy-btn" id="copyEmail" type="button" aria-label="复制邮箱地址 yuxink@126.com">
+              <button class="copy-btn" id="copyEmail" type="button" aria-label="复制邮箱地址 yuxink@126.com" data-en-label="Copy email address yuxink@126.com">
                 <svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>
               </button>
             </div>
-            <ul class="open-tags" aria-label="开放合作方向">
-              <li>Agent 工程</li>
-              <li>技术写作</li>
-              <li>开源协作</li>
+            <ul class="open-tags" aria-label="开放合作方向" data-en-label="Open to">
+              <li data-en="Agent engineering">Agent 工程</li>
+              <li data-en="Technical writing">技术写作</li>
+              <li data-en="Open source">开源协作</li>
             </ul>
             <ul class="socials">
               <li><a href="https://github.com/yuxinrun" target="_blank" rel="noopener"><svg class="i fill" aria-hidden="true"><use href="#i-github"/></svg>GitHub</a></li>
               <li><a href="https://x.com/yuxinks" target="_blank" rel="noopener"><svg class="i fill" aria-hidden="true"><use href="#i-x"/></svg>X</a></li>
-              <li><a href="https://yuxin.run/better-agent/" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>Agent 指南</a></li>
+              <li><a href="https://yuxin.run/better-agent/" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg><span data-en="Agent guide">Agent 指南</span></a></li>
             </ul>
           </div>
         </div>
@@ -905,45 +921,45 @@
   <footer class="site-footer">
     <div class="shell footer-index">
       <div class="footer-col">
-        <h4>Agent 手册</h4>
-        <a href="https://yuxin.run/better-agent/" target="_blank" rel="noopener">如何构建更好的 Agent</a>
-        <a href="https://yuxin.run/harness-engineering/" target="_blank" rel="noopener">缰绳工程</a>
+        <h4 data-en="Agent manuals">Agent 手册</h4>
+        <a href="https://yuxin.run/better-agent/" target="_blank" rel="noopener" data-en="How to Build Better Agents">如何构建更好的 Agent</a>
+        <a href="https://yuxin.run/harness-engineering/" target="_blank" rel="noopener" data-en="Harness engineering">缰绳工程</a>
         <a href="https://yuxin.run/agent-loop-engineering/" target="_blank" rel="noopener">Agent Loop</a>
-        <a href="https://yuxin.run/forward-deployed-engineer/" target="_blank" rel="noopener">FDE 这件事</a>
+        <a href="https://yuxin.run/forward-deployed-engineer/" target="_blank" rel="noopener" data-en="The FDE role">FDE 这件事</a>
       </div>
       <div class="footer-col">
-        <h4>模式手册</h4>
-        <a href="https://yuxin.run/agent-evaluation-patterns/" target="_blank" rel="noopener">Agent 评测</a>
-        <a href="https://yuxin.run/agent-memory-patterns/" target="_blank" rel="noopener">Agent 记忆</a>
+        <h4 data-en="Pattern guides">模式手册</h4>
+        <a href="https://yuxin.run/agent-evaluation-patterns/" target="_blank" rel="noopener" data-en="Agent evaluation">Agent 评测</a>
+        <a href="https://yuxin.run/agent-memory-patterns/" target="_blank" rel="noopener" data-en="Agent memory">Agent 记忆</a>
         <a href="https://yuxin.run/mcp-patterns/" target="_blank" rel="noopener">MCP Patterns</a>
-        <a href="https://yuxin.run/a2a-patterns/" target="_blank" rel="noopener">A2A 模式</a>
+        <a href="https://yuxin.run/a2a-patterns/" target="_blank" rel="noopener" data-en="A2A patterns">A2A 模式</a>
       </div>
       <div class="footer-col">
-        <h4>生活指南</h4>
-        <a href="https://yuxin.run/good-sleep/" target="_blank" rel="noopener">睡觉这件事</a>
-        <a href="https://yuxin.run/child-rearing/" target="_blank" rel="noopener">养大一个人</a>
-        <a href="https://yuxin.run/lean-strong/" target="_blank" rel="noopener">轻与壮</a>
-        <a href="https://yuxin.run/start-a-business/" target="_blank" rel="noopener">创业这件事</a>
+        <h4 data-en="Life guides">生活指南</h4>
+        <a href="https://yuxin.run/good-sleep/" target="_blank" rel="noopener" data-en="All about sleep">睡觉这件事</a>
+        <a href="https://yuxin.run/child-rearing/" target="_blank" rel="noopener" data-en="Raising a human">养大一个人</a>
+        <a href="https://yuxin.run/lean-strong/" target="_blank" rel="noopener" data-en="Lean &amp; strong">轻与壮</a>
+        <a href="https://yuxin.run/start-a-business/" target="_blank" rel="noopener" data-en="Starting a business">创业这件事</a>
       </div>
       <div class="footer-col">
-        <h4>本站</h4>
-        <a href="#about">关于</a>
-        <a href="#works">全部作品</a>
+        <h4 data-en="This site">本站</h4>
+        <a href="#about" data-en="About">关于</a>
+        <a href="#works" data-en="All works">全部作品</a>
         <a href="https://github.com/yuxinrun" target="_blank" rel="noopener">GitHub</a>
-        <a href="mailto:yuxink@126.com">邮箱</a>
+        <a href="mailto:yuxink@126.com" data-en="Email">邮箱</a>
       </div>
     </div>
     <div class="shell footer-inner">
       <div class="footer-brand">
         <span class="brand-mark small"><img src="assets/img/yuxin-run.png" alt="" width="40" height="27" loading="lazy"></span>
-        <p>鱼心快跑，Bug 追不到。</p>
+        <p data-en="Yuxin runs, bugs can’t catch up.">鱼心快跑，Bug 追不到。</p>
       </div>
-      <p class="copyright">© <span id="year">2026</span> 鱼心快跑</p>
-      <a class="to-top-link" href="#top">回到顶部 <svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+      <p class="copyright">© <span id="year">2026</span> <span data-en="Yuxin Run">鱼心快跑</span></p>
+      <a class="to-top-link" href="#top"><span data-en="Back to top">回到顶部</span> <svg class="i" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
     </div>
   </footer>
 
-  <button class="to-top" id="toTop" type="button" aria-label="回到页面顶部">
+  <button class="to-top" id="toTop" type="button" aria-label="回到页面顶部" data-en-label="Back to top">
     <svg class="to-top-ring" viewBox="0 0 44 44" aria-hidden="true" focusable="false">
       <circle class="ring-track" cx="22" cy="22" r="20.5"/>
       <circle class="ring-fill" cx="22" cy="22" r="20.5"/>

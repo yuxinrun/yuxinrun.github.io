@@ -10,17 +10,131 @@
   var $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+  /* ---------- Language (zh / en) ---------- */
+  var LANG_KEY = 'yr-lang';
+
+  var META_I18N = {
+    zh: {
+      title: '鱼心快跑 · 鱼心 | AI Agent 工程师',
+      siteName: '鱼心快跑',
+      desc: '鱼心，AI Agent 工程师，「鱼心快跑，Bug 追不到」。这里有他写下的 25 个站点：Agent 工程手册、工程模式手册，以及睡眠、养育、减脂与算法的生活指南。',
+      ogDesc: '鱼心快跑，Bug 追不到。25 个站点：Agent 工程手册、工程模式手册，以及睡眠、养育、减脂与算法的生活指南。',
+      twDesc: '鱼心快跑，Bug 追不到。一个专注 AI Agent 与工程效率的程序员。',
+      imageAlt: '鱼心快跑，Bug 追不到。',
+      locale: 'zh_CN'
+    },
+    en: {
+      title: 'Yuxin Run · Yuxin | AI Agent Engineer',
+      siteName: 'Yuxin Run',
+      desc: 'Yuxin is an AI agent engineer whose motto is “Yuxin runs, bugs can’t catch up”. 25 hand-written sites: agent engineering manuals, engineering pattern guides, and life guides on sleep, parenting, fat loss and algorithms.',
+      ogDesc: 'Yuxin runs, bugs can’t catch up. 25 sites: agent engineering manuals, pattern guides, and life guides.',
+      twDesc: 'Yuxin runs, bugs can’t catch up. A programmer focused on AI agents and engineering efficiency.',
+      imageAlt: 'Yuxin runs, bugs can’t catch up.',
+      locale: 'en_US'
+    }
+  };
+
+  var UI_TEXT = {
+    zh: {
+      langAria: 'Switch to English',
+      themeToDark: '切换到深色主题',
+      themeToLight: '切换到浅色主题',
+      menuOpen: '打开菜单',
+      menuClose: '关闭菜单',
+      copied: '邮箱已复制：',
+      copyFail: '请手动复制：'
+    },
+    en: {
+      langAria: '切换到中文',
+      themeToDark: 'Switch to dark theme',
+      themeToLight: 'Switch to light theme',
+      menuOpen: 'Open menu',
+      menuClose: 'Close menu',
+      copied: 'Email copied: ',
+      copyFail: 'Copy manually: '
+    }
+  };
+
+  function currentLang() { return root.dataset.lang === 'en' ? 'en' : 'zh'; }
+  function t() { return UI_TEXT[currentLang()]; }
+
+  function setMetaContent(selector, value) {
+    var el = $(selector);
+    if (el) el.setAttribute('content', value);
+  }
+
+  /* Every translatable node keeps its Chinese copy in data-zh(-html / -label),
+     captured once on first switch so round-tripping never loses markup. */
+  function applyLang(lang, persist) {
+    var isEn = lang === 'en';
+    root.dataset.lang = isEn ? 'en' : 'zh';
+    root.lang = isEn ? 'en' : 'zh-CN';
+
+    $$('[data-en]').forEach(function (el) {
+      if (el.getAttribute('data-zh') === null) el.setAttribute('data-zh', el.textContent);
+      el.textContent = isEn ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+    });
+
+    $$('[data-en-html]').forEach(function (el) {
+      if (el.getAttribute('data-zh-html') === null) el.setAttribute('data-zh-html', el.innerHTML);
+      el.innerHTML = isEn ? el.getAttribute('data-en-html') : el.getAttribute('data-zh-html');
+    });
+
+    $$('[data-en-label]').forEach(function (el) {
+      if (el.getAttribute('data-zh-label') === null) el.setAttribute('data-zh-label', el.getAttribute('aria-label') || '');
+      el.setAttribute('aria-label', isEn ? el.getAttribute('data-en-label') : el.getAttribute('data-zh-label'));
+    });
+
+    $$('[data-en-alt]').forEach(function (el) {
+      if (el.getAttribute('data-zh-alt') === null) el.setAttribute('data-zh-alt', el.getAttribute('alt') || '');
+      el.setAttribute('alt', isEn ? el.getAttribute('data-en-alt') : el.getAttribute('data-zh-alt'));
+    });
+
+    var meta = META_I18N[isEn ? 'en' : 'zh'];
+    document.title = meta.title;
+    setMetaContent('meta[name="description"]', meta.desc);
+    setMetaContent('meta[property="og:site_name"]', meta.siteName);
+    setMetaContent('meta[property="og:title"]', meta.title);
+    setMetaContent('meta[property="og:description"]', meta.ogDesc);
+    setMetaContent('meta[property="og:locale"]', meta.locale);
+    setMetaContent('meta[property="og:image:alt"]', meta.imageAlt);
+    setMetaContent('meta[name="twitter:title"]', meta.title);
+    setMetaContent('meta[name="twitter:description"]', meta.twDesc);
+
+    if (langBtn) {
+      langBtn.setAttribute('aria-pressed', isEn ? 'true' : 'false');
+      langBtn.setAttribute('aria-label', t().langAria);
+      var label = $('.lang-label', langBtn);
+      if (label) label.textContent = isEn ? '中' : 'EN';
+    }
+
+    if (themeBtn) {
+      themeBtn.setAttribute('aria-label', root.dataset.theme === 'dark' ? t().themeToLight : t().themeToDark);
+    }
+
+    if (menuBtn && menu) {
+      menuBtn.setAttribute('aria-label', menu.classList.contains('is-open') ? t().menuClose : t().menuOpen);
+    }
+
+    if (persist) {
+      try { localStorage.setItem(LANG_KEY, isEn ? 'en' : 'zh'); } catch (e) { /* private mode */ }
+    }
+  }
+
   /* ---------- Theme ---------- */
   var THEME_KEY = 'yr-theme';
   var themeBtn = $('#themeToggle');
   var themeMeta = $('meta[name="theme-color"]');
+  var menu = $('#mobileMenu');
+  var menuBtn = $('#menuToggle');
+  var langBtn = $('#langToggle');
 
   function applyTheme(theme, persist) {
     root.dataset.theme = theme;
     if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#0F1413' : '#F6F3EC');
     if (themeBtn) {
       themeBtn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-      themeBtn.setAttribute('aria-label', theme === 'dark' ? '切换到浅色主题' : '切换到深色主题');
+      themeBtn.setAttribute('aria-label', theme === 'dark' ? t().themeToLight : t().themeToDark);
     }
     if (persist) {
       try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* private mode */ }
@@ -92,15 +206,13 @@
   }
 
   /* ---------- Mobile menu ---------- */
-  var menu = $('#mobileMenu');
-  var menuBtn = $('#menuToggle');
 
   function setMenu(open, returnFocus) {
     if (!menu || !menuBtn) return;
     menu.classList.toggle('is-open', open);
     menu.setAttribute('aria-hidden', open ? 'false' : 'true');
     menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    menuBtn.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+    menuBtn.setAttribute('aria-label', open ? t().menuClose : t().menuOpen);
     document.body.classList.toggle('is-locked', open);
 
     if (open) {
@@ -228,7 +340,7 @@
   if (copyBtn) {
     copyBtn.addEventListener('click', function () {
       copyText(EMAIL).then(function (ok) {
-        showToast(ok ? '邮箱已复制：' + EMAIL : '请手动复制：' + EMAIL);
+        showToast(ok ? t().copied + EMAIL : t().copyFail + EMAIL);
       });
     });
   }
@@ -433,4 +545,14 @@
   /* ---------- Footer year ---------- */
   var year = $('#year');
   if (year) year.textContent = String(new Date().getFullYear());
+
+  /* ---------- Language boot ---------- */
+  applyLang(currentLang(), false);
+  root.classList.remove('is-i18n-loading');
+
+  if (langBtn) {
+    langBtn.addEventListener('click', function () {
+      applyLang(currentLang() === 'en' ? 'zh' : 'en', true);
+    });
+  }
 })();

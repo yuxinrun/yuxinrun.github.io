@@ -116,6 +116,10 @@ button {
   color: #06211e;
 }
 
+/* Avoid a flash of Chinese copy for readers whose first language is not Chinese:
+   the head script flags the document while main.js applies the English strings. */
+html.is-i18n-loading body { visibility: hidden; }
+
 /* ---------- 03. Base ---------- */
 body {
   min-height: 100vh;
@@ -374,6 +378,28 @@ h1, h2, h3, h4 {
   background: var(--teal-soft);
   transform: translateY(-1px);
 }
+
+.lang-toggle {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.lang-toggle .lang-label {
+  line-height: 1;
+  transform: translateY(0.5px);
+}
+
+.lang-toggle[aria-pressed="true"] {
+  color: var(--teal-ink);
+  border-color: var(--teal-ink);
+  background: var(--teal-soft);
+}
+
+html[data-lang="en"] .nav { gap: clamp(12px, 1.6vw, 22px); }
+
+html[data-lang="en"] .nav a { font-size: 13.5px; }
 
 .link-arrow {
   display: inline-flex;
@@ -1306,6 +1332,10 @@ html.js .term-line { opacity: 0; }
 .work-card.is-pending .work-kind::after {
   content: " · 待上线";
   color: color-mix(in srgb, var(--card-accent) 78%, var(--ink));
+}
+
+html[data-lang="en"] .work-card.is-pending .work-kind::after {
+  content: " · PENDING";
 }
 
 .work-card.is-pending:hover {
@@ -2341,6 +2371,7 @@ html.js .work-card:not(.is-inview) .pipeline .loop-label {
   .nav { display: none; }
   .menu-toggle { display: inline-grid; }
   .header-cta { display: none; }
+  .header-actions { margin-left: auto; }
 
   .grain { display: none; }
 
@@ -2504,6 +2535,10 @@ html.js .work-card:not(.is-inview) .pipeline .loop-label {
 }
 
 @media (max-width: 400px) {
+  .header-inner { gap: 12px; }
+  .brand { gap: 8px; }
+  .header-actions { gap: 6px; }
+  .header-actions .icon-btn { width: 36px; height: 36px; }
   .eyebrow { font-size: 9.5px; letter-spacing: 0.06em; }
   .hero-title { letter-spacing: -0.04em; }
   .btn { font-size: 14px; padding: 13px 18px; }
